@@ -1,4 +1,4 @@
-name: Deployment Guard
+name: Org-Wide Deployment Guard
 
 on:
   workflow_call:
@@ -17,9 +17,9 @@ jobs:
         shell: bash
         run: |
           # Read org variable
-          DEPLOY_VAR="${{ vars.allow_deployment }}"
+          DEPLOY_VAR="${{ vars.ALLOW_DEPLOYMENT }}"
 
-          # Trim spaces and convert to lowercase
+          # Normalize (lowercase, trim)
           DEPLOY_VAR_LOWER=$(echo "$DEPLOY_VAR" | tr '[:upper:]' '[:lower:]' | xargs)
 
           echo "Org variable value (normalized): '$DEPLOY_VAR_LOWER'"
@@ -27,8 +27,9 @@ jobs:
           # Block only if explicitly "false"
           if [ "$DEPLOY_VAR_LOWER" = "false" ]; then
             echo "allow=false" >> "$GITHUB_OUTPUT"
-            echo "🚫 Deployment blocked"
+            echo "🚫 Deployment blocked by org guard!"
           else
             echo "allow=true" >> "$GITHUB_OUTPUT"
             echo "✅ Deployment allowed"
           fi
+
