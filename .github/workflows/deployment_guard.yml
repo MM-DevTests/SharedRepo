@@ -11,11 +11,18 @@ jobs:
   check:
     runs-on: ubuntu-latest
     outputs:
-      allow: ${{ steps.check.outputs.allow }}
+      allow: ${{ steps.guard-check.outputs.allow }}
     steps:
-      - id: check
+      - id: guard-check
         run: |
-          if [ -z "${{ vars.allow_deployment }}" ] || [ "${{ vars.allow_deployment }}" = "true" ]; then
+          # Read org variable
+          DEPLOY_VAR="${{ vars.allow_deployment }}"
+
+          # Normalize: lowercase for safety
+          DEPLOY_VAR_LOWER=$(echo "$DEPLOY_VAR" | tr '[:upper:]' '[:lower:]')
+
+          # Determine if deployment is allowed
+          if [ -z "$DEPLOY_VAR_LOWER" ] || [ "$DEPLOY_VAR_LOWER" = "true" ]; then
             echo "allow=true" >> "$GITHUB_OUTPUT"
           else
             echo "allow=false" >> "$GITHUB_OUTPUT"
