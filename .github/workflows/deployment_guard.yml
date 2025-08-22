@@ -2,6 +2,11 @@ name: Org-Wide Deployment Guard
 
 on:
   workflow_call:
+    inputs:
+      allow_deployment:
+        description: "Org-level deployment flag"
+        required: true
+        type: string
     outputs:
       allow:
         description: "Whether deployment is allowed"
@@ -15,18 +20,14 @@ jobs:
     steps:
       - id: guard-check
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ inputs.token }}
         run: |
-          # Read org variable using the token (already accessible in vars)
-          DEPLOY_VAR="${{ vars.ALLOW_DEPLOYMENT }}"
+          DEPLOY_VAR="${{ inputs.allow_deployment }}"
 
           # Normalize (lowercase, trim)
           DEPLOY_VAR_LOWER=$(echo "$DEPLOY_VAR" | tr '[:upper:]' '[:lower:]' | xargs)
 
           echo "Org variable value (normalized): '$DEPLOY_VAR_LOWER'"
 
-          # Block only if explicitly "false"
           if [ "$DEPLOY_VAR_LOWER" = "false" ]; then
             echo "allow=false" >> "$GITHUB_OUTPUT"
             echo "🚫 Deployment blocked by org guard!"
