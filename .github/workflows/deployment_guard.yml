@@ -1,4 +1,4 @@
-# ==============================================================
+# =========================================================================================
 # Org-Level Deployment Guard Workflow
 #
 # This workflow is intended to be called by other workflows
@@ -9,7 +9,8 @@
 #   1. Reads the org-level variable `ALLOW_DEPLOYMENTS`.
 #   2. Normalizes it (lowercase and trimmed).
 #   3. Outputs a boolean `allow` indicating if deployment is allowed.
-# ==============================================================
+#   4. Setting ALLOW_DEPLOYMENTS to 'false' (case insensitive) will disable all workflows.
+# =========================================================================================
 
 on:
   workflow_call:
@@ -35,9 +36,7 @@ jobs:
           if [ "$DEPLOY_VAR_LOWER" = "false" ]; then
             # Deployment not allowed
             echo "allow=false" >> "$GITHUB_OUTPUT"
-            echo "🚫 Deployment blocked by org guard!"
           else
             # Deployment allowed
             echo "allow=true" >> "$GITHUB_OUTPUT"
-            echo "✅ Deployment allowed"
           fi
