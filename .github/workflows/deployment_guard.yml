@@ -2,11 +2,6 @@ name: Org-Wide Deployment Guard
 
 on:
   workflow_call:
-    inputs:
-      token:
-        description: "GitHub token for accessing org variables"
-        required: true
-        type: string
     outputs:
       allow:
         description: "Whether deployment is allowed"
