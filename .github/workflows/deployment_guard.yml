@@ -1,3 +1,16 @@
+# ==============================================================
+# Org-Level Deployment Guard Workflow
+#
+# This workflow is intended to be called by other workflows
+# (via `workflow_call`) to determine whether deployments are
+# allowed based on an organization-level variable.
+#
+# The workflow:
+#   1. Reads the org-level variable `ALLOW_DEPLOYMENTS`.
+#   2. Normalizes it (lowercase and trimmed).
+#   3. Outputs a boolean `allow` indicating if deployment is allowed.
+# ==============================================================
+
 on:
   workflow_call:
     outputs:
@@ -7,22 +20,24 @@ on:
 
 jobs:
   check:
+    name: Guard Check
     runs-on: ubuntu-latest
     outputs:
       allow: ${{ steps.guard-check.outputs.allow }}
+
     steps:
       - id: guard-check
+        name: Evaluate Org Deployment Flag
         run: |
-          # Read the org-level variable directly
           DEPLOY_VAR="${{ vars.ALLOW_DEPLOYMENTS }}"
           DEPLOY_VAR_LOWER=$(echo "$DEPLOY_VAR" | tr '[:upper:]' '[:lower:]' | xargs)
-
           echo "Org variable value (normalized): '$DEPLOY_VAR_LOWER'"
-
           if [ "$DEPLOY_VAR_LOWER" = "false" ]; then
+            # Deployment not allowed
             echo "allow=false" >> "$GITHUB_OUTPUT"
             echo "🚫 Deployment blocked by org guard!"
           else
+            # Deployment allowed
             echo "allow=true" >> "$GITHUB_OUTPUT"
             echo "✅ Deployment allowed"
           fi
