@@ -2,6 +2,11 @@ name: Org-Wide Deployment Guard
 
 on:
   workflow_call:
+    inputs:
+      token:
+        description: "GitHub token for accessing org variables"
+        required: true
+        type: string
     outputs:
       allow:
         description: "Whether deployment is allowed"
@@ -15,8 +20,10 @@ jobs:
     steps:
       - id: guard-check
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ inputs.token }}
         run: |
-          # Read org variable
+          # Read org variable using the token (already accessible in vars)
           DEPLOY_VAR="${{ vars.ALLOW_DEPLOYMENT }}"
 
           # Normalize (lowercase, trim)
@@ -32,4 +39,3 @@ jobs:
             echo "allow=true" >> "$GITHUB_OUTPUT"
             echo "✅ Deployment allowed"
           fi
-
