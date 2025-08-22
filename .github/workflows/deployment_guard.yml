@@ -1,12 +1,5 @@
-name: Org-Wide Deployment Guard
-
 on:
   workflow_call:
-    inputs:
-      allow_deployment:
-        description: "Org-level deployment flag"
-        required: true
-        type: string
     outputs:
       allow:
         description: "Whether deployment is allowed"
@@ -19,11 +12,9 @@ jobs:
       allow: ${{ steps.guard-check.outputs.allow }}
     steps:
       - id: guard-check
-        shell: bash
         run: |
-          DEPLOY_VAR="${{ inputs.allow_deployment }}"
-
-          # Normalize (lowercase, trim)
+          # Read the org-level variable directly
+          DEPLOY_VAR="${{ vars.ALLOW_DEPLOYMENTS }}"
           DEPLOY_VAR_LOWER=$(echo "$DEPLOY_VAR" | tr '[:upper:]' '[:lower:]' | xargs)
 
           echo "Org variable value (normalized): '$DEPLOY_VAR_LOWER'"
