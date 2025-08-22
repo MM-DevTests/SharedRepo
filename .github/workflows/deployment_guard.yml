@@ -14,16 +14,21 @@ jobs:
       allow: ${{ steps.guard-check.outputs.allow }}
     steps:
       - id: guard-check
+        shell: bash
         run: |
           # Read org variable
           DEPLOY_VAR="${{ vars.allow_deployment }}"
 
-          # Normalize: lowercase for safety
-          DEPLOY_VAR_LOWER=$(echo "$DEPLOY_VAR" | tr '[:upper:]' '[:lower:]')
+          # Trim spaces and convert to lowercase
+          DEPLOY_VAR_LOWER=$(echo "$DEPLOY_VAR" | tr '[:upper:]' '[:lower:]' | xargs)
 
-          # Determine if deployment is allowed
-          if [ -z "$DEPLOY_VAR_LOWER" ] || [ "$DEPLOY_VAR_LOWER" = "true" ]; then
-            echo "allow=true" >> "$GITHUB_OUTPUT"
-          else
+          echo "Org variable value (normalized): '$DEPLOY_VAR_LOWER'"
+
+          # Block only if explicitly "false"
+          if [ "$DEPLOY_VAR_LOWER" = "false" ]; then
             echo "allow=false" >> "$GITHUB_OUTPUT"
+            echo "🚫 Deployment blocked"
+          else
+            echo "allow=true" >> "$GITHUB_OUTPUT"
+            echo "✅ Deployment allowed"
           fi
