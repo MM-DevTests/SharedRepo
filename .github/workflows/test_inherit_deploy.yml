@@ -3,22 +3,19 @@ name: Deploy Application A
 on:
   workflow_call:
     secrets:
-      APP_SECRET:
+      ALLOW_DEPLOYMENTS:
         required: true
-      ANOTHER_SECRET:
-        required: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy Application A
+      - name: Check if deployment is allowed
         run: |
-          echo "🚀 Deploying Application A..."
-          echo "Using ANOTHER_SECRET: ${{ secrets.ANOTHER_SECRET }}"
+          echo "🚀 Checking deployment permission..."
           
-          if [ "${{ secrets.APP_SECRET }}" = "false" ]; then
-            echo "Secret is false → true"
+          if [ "${{ secrets.ALLOW_DEPLOYMENTS }}" = "false" ]; then
+            echo "true"
           else
-            echo "Secret is not false → false"
+            echo "false"
           fi
