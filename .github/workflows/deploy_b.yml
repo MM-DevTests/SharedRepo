@@ -1,5 +1,4 @@
 name: Deploy Application B
-
 on:
   workflow_call:
     secrets:
@@ -10,15 +9,20 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Prep step
-        run: echo "🔧 Preparing deployment environment for Application B..."
+      - name: Check Deployment Secret
+        id: check
+        run: |
+          if [ "${{ secrets.ALLOW_DEPLOYMENTS }}" = "false" ]; then
+            echo "blocked=true" >> $GITHUB_OUTPUT
+          else
+            echo "blocked=false" >> $GITHUB_OUTPUT
 
       - name: Deploy Application B
-        if: ${{ secrets.ALLOW_DEPLOYMENTS != 'false' }}
+        if: ${{ steps.check.outputs.blocked == 'false' }}
         run: |
           echo "🚀 Deploying Application B..."
-          # Insert deployment B steps here
+          # Insert deployment steps here
 
-      - name: Deployment blocked notice
-        if: ${{ secrets.ALLOW_DEPLOYMENTS == 'false' }}
-        run: echo "🚫 Deployment B skipped because deployments are blocked."
+      - name: Deployment Blocked
+        if: ${{ steps.check.outputs.blocked == 'true' }}
+        run: echo "🚫 Deployment blocked by system administrator."
