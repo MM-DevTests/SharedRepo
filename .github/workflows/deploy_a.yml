@@ -10,8 +10,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Always run prep step
-        run: echo "🔧 Preparing deployment environment..."
+      - name: Prep step
+        run: echo "🔧 Preparing deployment environment for Application A..."
 
       - name: Deploy Application A
         if: ${{ secrets.ALLOW_DEPLOYMENTS != 'false' }}
