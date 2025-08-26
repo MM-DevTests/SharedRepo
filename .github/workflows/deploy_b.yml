@@ -1,1 +1,17 @@
+name: Deploy Application B
+
+on:
+  workflow_call:
+    secrets:
+      ALLOW_DEPLOYMENTS:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Application B
+        run: |
+          echo "🚀 Deploying Application B..."
+          # Insert deployment B steps here
 
