@@ -16,6 +16,7 @@ jobs:
             echo "blocked=true" >> $GITHUB_OUTPUT
           else
             echo "blocked=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Deploy Application B
         if: ${{ steps.check.outputs.blocked == 'false' }}
@@ -25,4 +26,5 @@ jobs:
 
       - name: Deployment Blocked
         if: ${{ steps.check.outputs.blocked == 'true' }}
-        run: echo "🚫 Deployment blocked by system administrator."
+        run: |
+          echo "🚫 Deployment blocked by system administrator."
