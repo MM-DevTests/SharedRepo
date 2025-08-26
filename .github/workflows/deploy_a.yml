@@ -1,23 +1,24 @@
-name: Deployment Workflow
+name: Deploy Application A
 
 on:
-  workflow_dispatch:
+  workflow_call:
+    secrets:
+      ALLOW_DEPLOYMENTS:
+        required: true
 
 jobs:
-  deploy_a:
-    uses: ./.github/workflows/deploy_a.yml
-    secrets: inherit
-    if: ${{ secrets.ALLOW_DEPLOYMENTS != 'false' }}
-
-  deploy_b:
-    uses: ./.github/workflows/deploy_b.yml
-    secrets: inherit
-    if: ${{ secrets.ALLOW_DEPLOYMENTS != 'false' }}
-
-  blocked:
+  deploy:
     runs-on: ubuntu-latest
-    if: ${{ secrets.ALLOW_DEPLOYMENTS == 'false' }}
     steps:
-      - name: Deployment Blocked
+      - name: Always run prep step
+        run: echo "🔧 Preparing deployment environment..."
+
+      - name: Deploy Application A
+        if: ${{ secrets.ALLOW_DEPLOYMENTS != 'false' }}
         run: |
-          echo "🚫 Deployment blocked by system administrator."
+          echo "🚀 Deploying Application A..."
+          # Insert deployment A steps here
+
+      - name: Deployment blocked notice
+        if: ${{ secrets.ALLOW_DEPLOYMENTS == 'false' }}
+        run: echo "🚫 Deployment A skipped because deployments are blocked."
