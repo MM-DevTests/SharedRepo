@@ -1,0 +1,12 @@
+name: Deploy Application B
+on:
+  workflow_call:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Application B
+        run: |
+          echo "🚀 Deploying Application B..."
+          # Insert deployment steps here
