@@ -1,0 +1,23 @@
+name: Deployment Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy_a:
+    uses: ./.github/workflows/deploy_a.yml
+    secrets: inherit
+    if: ${{ secrets.ALLOW_DEPLOYMENTS != 'false' }}
+
+  deploy_b:
+    uses: ./.github/workflows/deploy_b.yml
+    secrets: inherit
+    if: ${{ secrets.ALLOW_DEPLOYMENTS != 'false' }}
+
+  blocked:
+    runs-on: ubuntu-latest
+    if: ${{ secrets.ALLOW_DEPLOYMENTS == 'false' }}
+    steps:
+      - name: Deployment Blocked
+        run: |
+          echo "🚫 Deployment blocked by system administrator."
