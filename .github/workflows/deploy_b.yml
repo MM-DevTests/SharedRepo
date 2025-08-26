@@ -10,8 +10,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Always run prep step
+        run: echo "🔧 Preparing deployment environment for Application B..."
+
       - name: Deploy Application B
+        if: ${{ secrets.ALLOW_DEPLOYMENTS != 'false' }}
         run: |
           echo "🚀 Deploying Application B..."
           # Insert deployment B steps here
 
+      - name: Deployment blocked notice
+        if: ${{ secrets.ALLOW_DEPLOYMENTS == 'false' }}
+        run: echo "🚫 Deployment B skipped because deployments are blocked."
