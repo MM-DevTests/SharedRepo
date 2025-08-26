@@ -2,9 +2,10 @@ name: Deploy Application A
 
 on:
   workflow_call:
-    secrets:
-      ALLOW_DEPLOYMENTS:
+    inputs:
+      allow_deployments:
         required: true
+        type: string
 
 jobs:
   deploy:
@@ -14,11 +15,11 @@ jobs:
         run: echo "🔧 Preparing deployment environment for Application A..."
 
       - name: Deploy Application A
-        if: ${{ secrets.ALLOW_DEPLOYMENTS != 'false' }}
+        if: ${{ inputs.allow_deployments != 'false' }}
         run: |
           echo "🚀 Deploying Application A..."
           # Insert deployment A steps here
 
       - name: Deployment blocked notice
-        if: ${{ secrets.ALLOW_DEPLOYMENTS == 'false' }}
+        if: ${{ inputs.allow_deployments == 'false' }}
         run: echo "🚫 Deployment A skipped because deployments are blocked."
