@@ -10,7 +10,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Always run prep step
+      - name: Prep step
         run: echo "🔧 Preparing deployment environment for Application B..."
 
       - name: Deploy Application B
