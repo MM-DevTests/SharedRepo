@@ -2,9 +2,6 @@ name: Deploy Application A
 
 on:
   workflow_call:
-    secrets:
-      ALLOW_DEPLOYMENTS:
-        required: true
 
 jobs:
   deploy:
