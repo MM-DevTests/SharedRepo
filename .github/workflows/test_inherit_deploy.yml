@@ -2,19 +2,24 @@ name: Deploy Application A
 
 on:
   workflow_call:
-
-env:
-  DEPLOY_FLAG: ${{ secrets.ALLOW_DEPLOYMENT }}
+    outputs:
+      allow:
+        description: "Checks to allow deployment."
+        value: ${{ jobs.deploy.outputs.allow }}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    outputs:
+      allow: ${{ steps.check.outputs.allow }}
     steps:
       - name: Check if deployment is allowed
+        id: check
         run: |
-          echo "🚀 Checking deployment permission..."
-          if [ "$(printf '%s' "$DEPLOY_FLAG" | tr '[:upper:]' '[:lower:]')" = "true" ]; then
-            echo "true"
-          else
-            echo "false"
+          if [ -z "${{ secrets.ALLOW_DEPLOYMENT }}" ]; then
+            echo "allow=false" >> "$GITHUB_OUTPUT"
+          elif [ "$(echo "${{ secrets.ALLOW_DEPLOYMENT }}" | tr '[:upper:]' '[:lower:]')" = "true" ]; then
+            echo "allow=true" >> "GITHUB_OUTPUT"
+          else:
+            echo "allow=false" >> "$GITHUB_OUTPUT"
           fi
