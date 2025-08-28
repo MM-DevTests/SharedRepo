@@ -3,6 +3,9 @@ name: Deploy Application A
 on:
   workflow_call:
 
+env:
+  DEPLOY_FLAG: ${{ secrets.ALLOW_DEPLOYMENT }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -10,8 +13,7 @@ jobs:
       - name: Check if deployment is allowed
         run: |
           echo "🚀 Checking deployment permission..."
-          
-          if [ "$(echo "${{ secrets.ALLOW_DEPLOYMENTS || '' }}" | tr '[:upper:]' '[:lower:]')" = "true" ]; then
+          if [ "$(printf '%s' "$DEPLOY_FLAG" | tr '[:upper:]' '[:lower:]')" = "true" ]; then
             echo "true"
           else
             echo "false"
