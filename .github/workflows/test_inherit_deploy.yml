@@ -16,9 +16,7 @@ jobs:
       - name: Check if deployment is allowed
         id: check
         run: |
-          if [ -z "${{ secrets.ALLOW_DEPLOYMENT }}" ]; then
-            echo "allow=false" >> $GITHUB_OUTPUT
-          elif [ "${{ secrets.ALLOW_DEPLOYMENT }}" = "true" ]; then
+          if [ "${{ secrets.ALLOW_DEPLOYMENT }}" = "true" ]; then
             echo "allow=true" >> $GITHUB_OUTPUT
           else
             echo "allow=false" >> $GITHUB_OUTPUT
