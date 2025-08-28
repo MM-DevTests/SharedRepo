@@ -1,25 +1,25 @@
-name: Deploy Application A
+name: Deploy Application A 
 
-on:
-  workflow_call:
-    outputs:
-      allow:
-        description: "Checks to allow deployment."
-        value: ${{ jobs.deploy.outputs.allow }}
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    outputs:
-      allow: ${{ steps.check.outputs.allow }}
-    steps:
-      - name: Check if deployment is allowed
-        id: check
-        shell: bash
-        run: |
-          DEPLOY_FLAG="$(echo "${{ secrets.ALLOW_DEPLOYMENT }}" | tr '[:upper:]' '[:lower:]' | xargs)"
-          if [ "$DEPLOY_FLAG" = "true" ]; then
-            echo "allow=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "allow=false" >> "$GITHUB_OUTPUT"
+on: 
+  workflow_call: 
+    outputs: 
+      allow: 
+        description: "Checks to allow deployment." 
+        value: ${{ jobs.deploy.outputs.allow }} 
+    
+jobs: 
+  deploy: 
+    runs-on: ubuntu-latest 
+    outputs: 
+      allow: ${{ steps.check.outputs.allow }} 
+    steps: 
+      - name: Check if deployment is allowed 
+        id: check 
+        run: | 
+          if [ -z "${{ secrets.ALLOW_DEPLOYMENT }}" ]; then 
+            echo "allow=false" >> "$GITHUB_OUTPUT" 
+          elif [ "${{ secrets.ALLOW_DEPLOYMENT }}" = "true" ]; then
+            echo "allow=true" >> "GITHUB_OUTPUT" 
+          else: 
+            echo "allow=false" >> "$GITHUB_OUTPUT" 
           fi
