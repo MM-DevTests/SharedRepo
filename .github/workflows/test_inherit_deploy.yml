@@ -15,8 +15,10 @@ jobs:
     steps:
       - name: Check if deployment is allowed
         id: check
+        env:
+          DEPLOY_SECRET: ${{ secrets.ALLOW_DEPLOYMENT }}
         run: |
-          if [ "${{ secrets.ALLOW_DEPLOYMENT }}" = "true" ]; then
+          if [ "$DEPLOY_SECRET" = "true" ]; then
             echo "allow=true" >> $GITHUB_OUTPUT
           else
             echo "allow=false" >> $GITHUB_OUTPUT
