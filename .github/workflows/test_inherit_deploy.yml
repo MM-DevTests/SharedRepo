@@ -16,10 +16,11 @@ jobs:
       - name: Check if deployment is allowed
         id: check
         run: |
-          if [ -z "${{ secrets.ALLOW_DEPLOYMENT }}" ]; then
-            echo "allow=false" >> "$GITHUB_OUTPUT"
-          elif [ "$(echo "${{ secrets.ALLOW_DEPLOYMENT }}" | tr '[:upper:]' '[:lower:]')" = "true" ]; then
-            echo "allow=true" >> "GITHUB_OUTPUT"
-          else:
+          # Normalize the secret: trim spaces, lowercase
+          DEPLOY_FLAG="$(echo "${{ secrets.ALLOW_DEPLOYMENT }}" | tr '[:upper:]' '[:lower:]' | xargs)"
+
+          if [ "$DEPLOY_FLAG" = "true" ]; then
+            echo "allow=true" >> "$GITHUB_OUTPUT"
+          else
             echo "allow=false" >> "$GITHUB_OUTPUT"
           fi
