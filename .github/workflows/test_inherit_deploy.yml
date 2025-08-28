@@ -16,7 +16,7 @@ jobs:
       - name: Check if deployment is allowed
         id: check
         run: |
-          # Normalize the secret: trim spaces, lowercase
+          # Normalize secret: lowercase, trim whitespace
           DEPLOY_FLAG="$(echo "${{ secrets.ALLOW_DEPLOYMENT }}" | tr '[:upper:]' '[:lower:]' | xargs)"
 
           if [ "$DEPLOY_FLAG" = "true" ]; then
