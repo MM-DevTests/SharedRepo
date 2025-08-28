@@ -2,9 +2,6 @@ name: Deploy Application A
 
 on:
   workflow_call:
-    secrets:
-      ALLOW_DEPLOYMENT:
-        required: true
     outputs:
       allow:
         description: "Checks to allow deployment."
