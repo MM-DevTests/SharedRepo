@@ -20,6 +20,6 @@ jobs:
             echo "allow=false" >> "$GITHUB_OUTPUT" 
           elif [ "${{ secrets.ALLOW_DEPLOYMENT }}" = "true" ]; then
             echo "allow=true" >> "GITHUB_OUTPUT" 
-          else: 
+          else
             echo "allow=false" >> "$GITHUB_OUTPUT" 
           fi
