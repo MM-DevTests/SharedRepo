@@ -2,6 +2,9 @@ name: Deploy Application A
 
 on:
   workflow_call:
+    secrets:
+      ALLOW_DEPLOYMENT:
+        required: true
     outputs:
       allow:
         description: "Checks to allow deployment."
@@ -15,10 +18,9 @@ jobs:
     steps:
       - name: Check if deployment is allowed
         id: check
+        shell: bash
         run: |
-          # Normalize secret: lowercase, trim whitespace
           DEPLOY_FLAG="$(echo "${{ secrets.ALLOW_DEPLOYMENT }}" | tr '[:upper:]' '[:lower:]' | xargs)"
-
           if [ "$DEPLOY_FLAG" = "true" ]; then
             echo "allow=true" >> "$GITHUB_OUTPUT"
           else
